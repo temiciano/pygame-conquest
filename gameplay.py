@@ -6,8 +6,9 @@ class Personaje:
         self.image = pygame.image.load(walk[0])
         self.pos = pos
         self.speed = speed
-        self.idle = [pygame.image.load(sprite) for sprite in idle]
-        self.walk = [pygame.image.load(sprite) for sprite in walk]
+        self.idlesprites = [pygame.image.load(sprite) for sprite in idle]
+        self.walksprites = [pygame.image.load(sprite) for sprite in walk]
+        self.jumpsprites = [pygame.image.load(sprite) for sprite in jump]
         self.frame = 0
         self.flip = False
         self.walkcounter = 0
@@ -25,27 +26,29 @@ class Personaje:
             if self.jumpSpeed < -6:
                 self.jump = False
                 self.jumpSpeed = 6
+            self.frame = (self.frame + 1) % len(self.jumpsprites)
+            self.image = self.jumpsprites[self.frame]
         if keys[pygame.K_RIGHT]:
             self.pos[0] += self.speed
             self.flip = False
             self.walkcounter += 1
             if self.walkcounter % 5 == 0:
-                self.frame = (self.frame + 1) % len(self.walk)
-                self.image = self.walk[self.frame]
+                self.frame = (self.frame + 1) % len(self.walksprites)
+                self.image = self.walksprites[self.frame]
         elif keys[pygame.K_LEFT]:
             self.pos[0] -= self.speed
             self.flip = True
             self.walkcounter += 1
             if self.walkcounter % 5 == 0:  # Cambiar el sprite cada 5 ciclos
-                self.frame = (self.frame + 1) % len(self.walk)
-                self.image = self.walk[self.frame]
+                self.frame = (self.frame + 1) % len(self.walksprites)
+                self.image = self.walksprites[self.frame]
         else:
             self.pos[0] == self.pos
             self.walkcounter == 0
             self.idlecounter += 1
             if self.idlecounter % 10 == 0:
-                self.frame = (self.frame + 1) % len(self.idle)
-                self.image = self.idle[self.frame]
+                self.frame = (self.frame + 1) % len(self.idlesprites)
+                self.image = self.idlesprites[self.frame]
 
 
     def draw(self):
@@ -65,7 +68,7 @@ NEGRO = (0,0,0)
 screen.fill (NEGRO)
 
 # Crear los personajes
-Player = Personaje([100,180], 3, ['sprites/player/idle1.png', 'sprites/player/idle2.png'], ['sprites/player/walk1.png', 'sprites/player/walk2.png'])
+Player = Personaje([100,180], 3, ['sprites/player/idle1.png', 'sprites/player/idle2.png'], ['sprites/player/walk1.png', 'sprites/player/walk2.png'], ['sprites/player/jump1.png', 'sprites/player/jump2.png'])
 
 #Bucle de juego  y controles
 while True:
